@@ -1,0 +1,418 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+  
+  <!-- Custom boolean type for Python-style True/False strings -->
+  <xs:simpleType name="PythonBoolean">
+    <xs:restriction base="xs:string">
+      <xs:pattern value="True|False"/>
+    </xs:restriction>
+  </xs:simpleType>
+  
+  <!-- Root element -->
+  <xs:element name="report">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="plipversion" type="xs:string" minOccurs="0"/>
+        <xs:element name="bindingsite" type="BindingSiteType" minOccurs="0" maxOccurs="unbounded"/>
+        <xs:element name="date_of_creation" type="xs:string" minOccurs="0"/>
+        <xs:element name="citation_information" type="xs:string" minOccurs="0"/>
+        <xs:element name="maintainer_information" type="xs:string" minOccurs="0"/>
+        <xs:element name="mode" type="xs:string" minOccurs="0"/>
+        <xs:element name="pdbid" type="xs:string" minOccurs="0"/>
+        <xs:element name="model" type="xs:string" minOccurs="0"/>
+        <xs:element name="filetype" type="xs:string" minOccurs="0"/>
+        <xs:element name="pdbfile" type="xs:string" minOccurs="0"/>
+        <xs:element name="pdbfixes" type="PythonBoolean" minOccurs="0"/>
+        <xs:element name="filename" type="xs:string" minOccurs="0"/>
+        <xs:element name="excluded_ligands" type="ExcludedLigandsType" minOccurs="0"/>
+        <xs:element name="covlinkages" type="CovLinkagesType" minOccurs="0"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <!-- Binding Site Type -->
+  <xs:complexType name="BindingSiteType">
+    <xs:sequence>
+      <xs:element name="identifiers" type="IdentifiersType"/>
+      <xs:element name="lig_properties" type="LigandPropertiesType"/>
+      <xs:element name="interacting_chains" type="InteractingChainsType"/>
+      <xs:element name="bs_residues" type="BSResiduesType"/>
+      <xs:element name="interactions" type="InteractionsType"/>
+      <xs:element name="mappings" type="MappingsType"/>
+    </xs:sequence>
+    <xs:attribute name="id" type="xs:positiveInteger" use="required"/>
+    <xs:attribute name="has_interactions" type="PythonBoolean" use="required"/>
+  </xs:complexType>
+
+  <!-- Identifiers Type -->
+  <xs:complexType name="IdentifiersType">
+    <xs:sequence>
+      <xs:element name="longname" type="xs:string" minOccurs="0"/>
+      <xs:element name="ligtype" type="xs:string" minOccurs="0"/>
+      <xs:element name="hetid" type="xs:string" minOccurs="0"/>
+      <xs:element name="chain" type="xs:string" minOccurs="0"/>
+      <xs:element name="position" type="xs:integer" minOccurs="0"/>
+      <xs:element name="composite" type="PythonBoolean" minOccurs="0"/>
+      <xs:element name="members" type="MembersType" minOccurs="0"/>
+      <xs:element name="smiles" type="xs:string" minOccurs="0"/>
+      <xs:element name="inchikey" type="xs:string" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <!-- Members Type -->
+  <xs:complexType name="MembersType">
+    <xs:sequence>
+      <xs:element name="member" minOccurs="0" maxOccurs="unbounded">
+        <xs:complexType>
+          <xs:simpleContent>
+            <xs:extension base="xs:string">
+              <xs:attribute name="id" type="xs:positiveInteger" use="required"/>
+            </xs:extension>
+          </xs:simpleContent>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <!-- Ligand Properties Type -->
+  <xs:complexType name="LigandPropertiesType">
+    <xs:sequence>
+      <xs:element name="num_heavy_atoms" type="xs:integer" minOccurs="0"/>
+      <xs:element name="num_hbd" type="xs:integer" minOccurs="0"/>
+      <xs:element name="num_unpaired_hbd" type="xs:integer" minOccurs="0"/>
+      <xs:element name="num_hba" type="xs:integer" minOccurs="0"/>
+      <xs:element name="num_unpaired_hba" type="xs:integer" minOccurs="0"/>
+      <xs:element name="num_hal" type="xs:integer" minOccurs="0"/>
+      <xs:element name="num_unpaired_hal" type="xs:integer" minOccurs="0"/>
+      <xs:element name="num_aromatic_rings" type="xs:integer" minOccurs="0"/>
+      <xs:element name="num_rotatable_bonds" type="xs:integer" minOccurs="0"/>
+      <xs:element name="molweight" type="xs:double" minOccurs="0"/>
+      <xs:element name="logp" type="xs:double" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <!-- Interacting Chains Type -->
+  <xs:complexType name="InteractingChainsType">
+    <xs:sequence>
+      <xs:element name="interacting_chain" minOccurs="0" maxOccurs="unbounded">
+        <xs:complexType>
+          <xs:simpleContent>
+            <xs:extension base="xs:string">
+              <xs:attribute name="id" type="xs:positiveInteger" use="required"/>
+            </xs:extension>
+          </xs:simpleContent>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <!-- Binding Site Residues Type -->
+  <xs:complexType name="BSResiduesType">
+    <xs:sequence>
+      <xs:element name="bs_residue" minOccurs="0" maxOccurs="unbounded">
+        <xs:complexType>
+          <xs:simpleContent>
+            <xs:extension base="xs:string">
+              <xs:attribute name="id" type="xs:positiveInteger" use="required"/>
+              <xs:attribute name="contact" type="PythonBoolean" use="required"/>
+              <xs:attribute name="min_dist" type="xs:double" use="required"/>
+              <xs:attribute name="aa" type="xs:string" use="required"/>
+            </xs:extension>
+          </xs:simpleContent>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <!-- Interactions Type -->
+  <xs:complexType name="InteractionsType">
+    <xs:sequence>
+      <xs:element name="hydrophobic_interactions" type="HydrophobicInteractionsType" minOccurs="0"/>
+      <xs:element name="hydrogen_bonds" type="HydrogenBondsType" minOccurs="0"/>
+      <xs:element name="water_bridges" type="WaterBridgesType" minOccurs="0"/>
+      <xs:element name="salt_bridges" type="SaltBridgesType" minOccurs="0"/>
+      <xs:element name="pi_stacks" type="PiStacksType" minOccurs="0"/>
+      <xs:element name="pi_cation_interactions" type="PiCationInteractionsType" minOccurs="0"/>
+      <xs:element name="halogen_bonds" type="HalogenBondsType" minOccurs="0"/>
+      <xs:element name="metal_complexes" type="MetalComplexesType" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <!-- Coordinate Type -->
+  <xs:complexType name="CoordinateType">
+    <xs:sequence>
+      <xs:element name="x" type="xs:double"/>
+      <xs:element name="y" type="xs:double"/>
+      <xs:element name="z" type="xs:double"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <!-- Base Interaction Type (shared fields) -->
+  <xs:complexType name="BaseInteractionType">
+    <xs:sequence>
+      <xs:element name="resnr" type="xs:integer"/>
+      <xs:element name="restype" type="xs:string"/>
+      <xs:element name="reschain" type="xs:string"/>
+      <xs:element name="resnr_lig" type="xs:integer"/>
+      <xs:element name="restype_lig" type="xs:string"/>
+      <xs:element name="reschain_lig" type="xs:string"/>
+    </xs:sequence>
+    <xs:attribute name="id" type="xs:positiveInteger" use="required"/>
+  </xs:complexType>
+
+  <!-- Hydrophobic Interaction Type -->
+  <xs:complexType name="HydrophobicInteractionType">
+    <xs:complexContent>
+      <xs:extension base="BaseInteractionType">
+        <xs:sequence>
+          <xs:element name="dist" type="xs:double"/>
+          <xs:element name="ligcarbonidx" type="xs:integer"/>
+          <xs:element name="protcarbonidx" type="xs:integer"/>
+          <xs:element name="ligcoo" type="CoordinateType"/>
+          <xs:element name="protcoo" type="CoordinateType"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="HydrophobicInteractionsType">
+    <xs:sequence>
+      <xs:element name="hydrophobic_interaction" type="HydrophobicInteractionType" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <!-- Hydrogen Bond Type -->
+  <xs:complexType name="HydrogenBondType">
+    <xs:complexContent>
+      <xs:extension base="BaseInteractionType">
+        <xs:sequence>
+          <xs:element name="sidechain" type="PythonBoolean"/>
+          <xs:element name="dist_h-a" type="xs:double"/>
+          <xs:element name="dist_d-a" type="xs:double"/>
+          <xs:element name="don_angle" type="xs:double"/>
+          <xs:element name="protisdon" type="PythonBoolean"/>
+          <xs:element name="donoridx" type="xs:integer"/>
+          <xs:element name="donortype" type="xs:string"/>
+          <xs:element name="acceptoridx" type="xs:integer"/>
+          <xs:element name="acceptortype" type="xs:string"/>
+          <xs:element name="ligcoo" type="CoordinateType"/>
+          <xs:element name="protcoo" type="CoordinateType"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="HydrogenBondsType">
+    <xs:sequence>
+      <xs:element name="hydrogen_bond" type="HydrogenBondType" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <!-- Water Bridge Type -->
+  <xs:complexType name="WaterBridgeType">
+    <xs:complexContent>
+      <xs:extension base="BaseInteractionType">
+        <xs:sequence>
+          <xs:element name="dist_a-w" type="xs:double"/>
+          <xs:element name="dist_d-w" type="xs:double"/>
+          <xs:element name="don_angle" type="xs:double"/>
+          <xs:element name="water_angle" type="xs:double"/>
+          <xs:element name="protisdon" type="PythonBoolean"/>
+          <xs:element name="donor_idx" type="xs:integer"/>
+          <xs:element name="donortype" type="xs:string"/>
+          <xs:element name="acceptor_idx" type="xs:integer"/>
+          <xs:element name="acceptortype" type="xs:string"/>
+          <xs:element name="water_idx" type="xs:integer"/>
+          <xs:element name="ligcoo" type="CoordinateType"/>
+          <xs:element name="protcoo" type="CoordinateType"/>
+          <xs:element name="watercoo" type="CoordinateType"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="WaterBridgesType">
+    <xs:sequence>
+      <xs:element name="water_bridge" type="WaterBridgeType" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <!-- Salt Bridge Type -->
+  <xs:complexType name="SaltBridgeType">
+    <xs:sequence>
+      <xs:element name="resnr" type="xs:integer"/>
+      <xs:element name="restype" type="xs:string"/>
+      <xs:element name="reschain" type="xs:string"/>
+      <xs:element name="prot_idx_list" type="IdxListType"/>
+      <xs:element name="resnr_lig" type="xs:integer"/>
+      <xs:element name="restype_lig" type="xs:string"/>
+      <xs:element name="reschain_lig" type="xs:string"/>
+      <xs:element name="dist" type="xs:double"/>
+      <xs:element name="protispos" type="PythonBoolean"/>
+      <xs:element name="lig_group" type="xs:string"/>
+      <xs:element name="lig_idx_list" type="IdxListType"/>
+      <xs:element name="ligcoo" type="CoordinateType"/>
+      <xs:element name="protcoo" type="CoordinateType"/>
+    </xs:sequence>
+    <xs:attribute name="id" type="xs:positiveInteger" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="SaltBridgesType">
+    <xs:sequence>
+      <xs:element name="salt_bridge" type="SaltBridgeType" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <!-- Pi Stacking Type -->
+  <xs:complexType name="PiStackingType">
+    <xs:sequence>
+      <xs:element name="resnr" type="xs:integer"/>
+      <xs:element name="restype" type="xs:string"/>
+      <xs:element name="reschain" type="xs:string"/>
+      <xs:element name="resnr_lig" type="xs:integer"/>
+      <xs:element name="restype_lig" type="xs:string"/>
+      <xs:element name="reschain_lig" type="xs:string"/>
+      <xs:element name="prot_idx_list" type="IdxListType"/>
+      <xs:element name="centdist" type="xs:double"/>
+      <xs:element name="angle" type="xs:double"/>
+      <xs:element name="offset" type="xs:double"/>
+      <xs:element name="type" type="xs:string"/>
+      <xs:element name="lig_idx_list" type="IdxListType"/>
+      <xs:element name="ligcoo" type="CoordinateType"/>
+      <xs:element name="protcoo" type="CoordinateType"/>
+    </xs:sequence>
+    <xs:attribute name="id" type="xs:positiveInteger" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="PiStacksType">
+    <xs:sequence>
+      <xs:element name="pi_stack" type="PiStackingType" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <!-- Pi Cation Type -->
+  <xs:complexType name="PiCationType">
+    <xs:sequence>
+      <xs:element name="resnr" type="xs:integer"/>
+      <xs:element name="restype" type="xs:string"/>
+      <xs:element name="reschain" type="xs:string"/>
+      <xs:element name="prot_idx_list" type="IdxListType"/>
+      <xs:element name="resnr_lig" type="xs:integer"/>
+      <xs:element name="restype_lig" type="xs:string"/>
+      <xs:element name="reschain_lig" type="xs:string"/>
+      <xs:element name="dist" type="xs:double"/>
+      <xs:element name="offset" type="xs:double"/>
+      <xs:element name="protcharged" type="PythonBoolean"/>
+      <xs:element name="lig_group" type="xs:string"/>
+      <xs:element name="lig_idx_list" type="IdxListType"/>
+      <xs:element name="ligcoo" type="CoordinateType"/>
+      <xs:element name="protcoo" type="CoordinateType"/>
+    </xs:sequence>
+    <xs:attribute name="id" type="xs:positiveInteger" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="PiCationInteractionsType">
+    <xs:sequence>
+      <xs:element name="pi_cation_interaction" type="PiCationType" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <!-- Halogen Bond Type -->
+  <xs:complexType name="HalogenBondType">
+    <xs:complexContent>
+      <xs:extension base="BaseInteractionType">
+        <xs:sequence>
+          <xs:element name="dist" type="xs:double"/>
+          <xs:element name="don_angle" type="xs:double"/>
+          <xs:element name="acc_angle" type="xs:double"/>
+          <xs:element name="donortype" type="xs:string"/>
+          <xs:element name="acceptortype" type="xs:string"/>
+          <xs:element name="don_idx" type="xs:integer"/>
+          <xs:element name="acc_idx" type="xs:integer"/>
+          <xs:element name="sidechain" type="PythonBoolean"/>
+          <xs:element name="ligcoo" type="CoordinateType"/>
+          <xs:element name="protcoo" type="CoordinateType"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="HalogenBondsType">
+    <xs:sequence>
+      <xs:element name="halogen_bond" type="HalogenBondType" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <!-- Metal Complex Type -->
+  <xs:complexType name="MetalComplexType">
+    <xs:complexContent>
+      <xs:extension base="BaseInteractionType">
+        <xs:sequence>
+          <xs:element name="metal_idx" type="xs:integer"/>
+          <xs:element name="metal_type" type="xs:string"/>
+          <xs:element name="target_idx" type="xs:integer"/>
+          <xs:element name="target_type" type="xs:string"/>
+          <xs:element name="coordination" type="xs:integer"/>
+          <xs:element name="dist" type="xs:double"/>
+          <xs:element name="location" type="xs:string"/>
+          <xs:element name="rms" type="xs:double"/>
+          <xs:element name="geometry" type="xs:string"/>
+          <xs:element name="complexnum" type="xs:integer"/>
+          <xs:element name="metalcoo" type="CoordinateType"/>
+          <xs:element name="targetcoo" type="CoordinateType"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="MetalComplexesType">
+    <xs:sequence>
+      <xs:element name="metal_complex" type="MetalComplexType" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <!-- Index List Type (for atom indices) -->
+  <xs:complexType name="IdxListType">
+    <xs:sequence>
+      <xs:element name="idx" minOccurs="0" maxOccurs="unbounded">
+        <xs:complexType>
+          <xs:simpleContent>
+            <xs:extension base="xs:integer">
+              <xs:attribute name="id" type="xs:positiveInteger" use="required"/>
+            </xs:extension>
+          </xs:simpleContent>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <!-- Mappings Type -->
+  <xs:complexType name="MappingsType">
+    <xs:sequence>
+      <xs:element name="smiles_to_pdb" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <!-- Excluded Ligands Type -->
+  <xs:complexType name="ExcludedLigandsType">
+    <xs:sequence>
+      <xs:element name="excluded_ligand" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <!-- Covalent Linkages Type -->
+  <xs:complexType name="CovLinkagesType">
+    <xs:sequence>
+      <xs:element name="covlinkage" minOccurs="0" maxOccurs="unbounded">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="res1" type="xs:string"/>
+            <xs:element name="res2" type="xs:string"/>
+          </xs:sequence>
+          <xs:attribute name="id" type="xs:positiveInteger" use="required"/>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+</xs:schema>
